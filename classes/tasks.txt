@@ -1,0 +1,444 @@
+Assignmets:-
+D:java\test
+-----------
+26-7-18:
+Program 1: PrintNameUsingIf
+write below program using if else:
+String name ="Sudha";
+
+sudha: 27
+murali: 21
+venky 24
+ashok: 27
+prasad: 21
+
+if( name =="sudha"){
+
+}else if(..){
+
+}
+
+
+Program: 2 PrintNameUsingSwitch
+write below program using switch:
+String name ="Sudha";
+
+sudha: 27
+mural: 21
+venky 24
+ashok: 27
+prasad: 21
+
+switch(name){
+}
+
+Program: 3 SwapNumbers
+	Swap 2 numbers
+
+Program: 4	PrintNumbersInAsending
+ Print numbers from 50 to 100
+ 
+Program: 5 PrintEvenNumbersInAsending
+ Print numbers from 20 to 800 only even numbers
+ 
+Program: 6 PrintOddNumbersInAsending
+ Print numbers from 501 to 22669 only odd numbers
+ 
+Program: 7 PrintNumbersInDecending
+ Print numbers from 100 to 0
+	int i = 100;  i < 100 ; i--
+ 
+Program: 8 PrintEvenNumbersInDecending
+ Print numbers from 288980 to 800 only even numbers
+ 
+Program: 9 PrintOddNumbersInDecending
+ Print numbers from 22669 to 200 only odd numbers
+---------------------------------------------------------
+27-7-18
+
+Program: 10	PrintNumbersInAsendingUsingWhile
+ Print numbers from 50 to 100
+ 
+Program: 11 PrintEvenNumbersInAsendingWhile
+ Print numbers from 20 to 800 only even numbers
+ 
+Program: 12 PrintOddNumbersInAsendingWhile
+ Print numbers from 501 to 22669 only odd numbers
+ 
+Program: 13 PrintNumbersInDecendingWhile
+ Print numbers from 100 to 0
+	int i = 100;  i < 100 ; i--
+ 
+Program: 14 
+	public static String getName(){
+		return "sudhakar"
+		
+ Print numbers from 288980 to 800 only even numbers
+ 
+Program: 15 PrintOddNumbersInDecendingWhile
+ Print numbers from 22669 to 200 only odd numbers
+
+ Program: 16	PrintNumbersInAsendingUsingDoWhile
+ Print numbers from 50 to 100
+ 
+Program: 17 PrintEvenNumbersInAsendingDoWhile
+ Print numbers from 20 to 800 only even numbers
+ 
+Program: 18 PrintOddNumbersInAsendingDoWhile
+ Print numbers from 501 to 22669 only odd numbers
+ 
+Program: 19 PrintNumbersInDecendingDoWhile
+ Print numbers from 100 to 0
+	int i = 100;  i < 100 ; i--
+ 
+Program: 20 PrintEvenNumbersInDecendingDoWhile
+ Print numbers from 288980 to 800 only even numbers
+ 
+Program: 21 PrintOddNumbersInDecendingDoWhile
+ Print numbers from 22669 to 200 only odd numbers
+----------------------------------------------------
+Arrays:
+ 
+Program: 22 ArraysByteExample
+ Take array size as 10 and print values.
+ byte[] b = new byte[10]
+ 
+Program: 23 ArraysShortExample
+ Take array size as 10 and print values.
+ short[] b = new short[10] 
+
+Program: 24 ArraysIntExample
+ Take array size as 10 and print values.
+ int[] b = new int[10]
+ 
+Program: 25 ArraysLongExample
+ Take array size as 10 and print values.
+ long[] b = new long[10]
+ 
+Program: 26 ArraysFloatExample
+ Take array size as 10 and print values.
+ float[] b = new float[10]
+ 
+Program: 27 ArraysDoubleExample
+ Take array size as 10 and print values.
+ double[] b = new double[10]
+ 
+Program: 28 ArraysCharExample
+ Take array size as 10 and print values.
+ char[] b = new char[10]
+ b[1] = 'c';
+ 
+Program: 29 ArraysStringExample
+ Take array size as 10 and print values.
+ String[] b = new String[10]
+ b[1] = "sudha";
+ 
+Program: 30 ArraysStringInitExample
+ String[] b = {"S", "Sdfsdf", "Sfsdfsdf"}
+ foreach
+  
+ Program: 31 ArraysByteInitExample
+ byte[] b = {}
+foreach
+ 
+Program: 32 ArraysShortExample
+ Take array size as 10 and print values.
+ short[] b = new short[10] 
+
+Program: 33 ArraysIntExample
+ Take array size as 10 and print values.
+ int[] b = new int[10]
+ 
+Program: 34 ArraysLongExample
+ Take array size as 10 and print values.
+ long[] b = new long[10]
+ 
+Program: 35 ArraysFloatExample
+ Take array size as 10 and print values.
+ float[] b = new float[10]
+ 
+Program: 36 ArraysDoubleExample
+ Take array size as 10 and print values.
+ double[] b = new double[10]
+ 
+Program: 37 ArraysCharExample
+ Take array size as 10 and print values.
+ char[] b = new char[10]
+ b[1] = 'c';
+ 
+Program: 38 ArraysStringExample
+ Take array size as 10 and print values.
+ String[] b = new String[10]
+ b[1] = "sudha";
+------------------------------------------
+Methods:
+Program: 39 InstanceMethodExample 
+declare below methods:
+1. addition
+2. substraction
+3. division
+4. multiply
+5. remainder
+
+Program: 40 StaticMethodExample 
+declare below methods:
+1. addition
+2. substraction
+3. division
+4. multiply
+5. remainder
+
+Program: 41 InstanceMethodParamExample 
+declare below methods:
+1. addition(int a, int b)
+2. substraction(float a, float b)
+3. division(int c, byte b)
+4. multiply(double d, byte b)
+5. remainder(double d, float f)
+6. printName(String name, int age);
+
+Program: 42 StaticMethodParamExample 
+declare below methods:
+1. addition(int a, int b)
+2. substraction(float a, float b)
+3. division(int c, byte b)
+4. multiply(double d, byte b)
+5. remainder(double d, float f)
+6. printName(String name, int age)
+
+Program 43 Print numbers from 59 to 19
+
+Program 44 Arrayexample
+	int[] a = {12,45,4,76,6,9895545,45};
+	print array values in reverse.
+	for(int i =a.length -1 ; i>= 0 ; i--){
+		sop(a[i])
+	}
+
+Program 45: MethodCallingPractise
+	m1,	m2 are instance methods 
+	m3, m4 m5 are static methods.
+main -> m3 -> m2 -> m1 -> m4 -> m5
+
+
+Program 46: MethodCallingPractise2
+	m1,	m2 are instance methods 
+	m3, m4 m5 are static methods.
+main -> m2 -> m3 -> m1 -> m4 -> m5
+
+Program 47: MethodCallingPractise3
+	m1,	m2 are instance methods 
+	m3, m4 m5 are static methods.
+main -> m4 -> m3 -> m1 -> m2 -> m5
+
+23-09-2018
+Program 48: MethodReturnTypeMath
+	public int add(int a, int b){}
+	public double sub(double a, double b){}
+	public long multiply(short a, short b){}
+	public double division(float a, float b){}
+	public void m1(){sopln('m1');}
+	
+Program 49: MethodReturnTypeDto
+	public String getName(){}
+	public int getAge(){}
+	public long getSalary(){}
+	public void m1(){sopln('m1');}
+
+Program 50: MethodReturnTypeClassDemo
+	public static MethodReturnTypeClassDemo getMethodReturnTypeClassDemo(){}
+	public int getAge(){}
+	public long getSalary(){}
+	public void m1(){sopln('m1');}
+	
+main -> getMethodReturnTypeClassDemo
+	
+22-08-2018
+-----------------------------------------	
+Program 51: InstanceMethodCallingPractise
+	public int a = 10; //instance var
+	public void m1(){ sop("m1"); sop(a);}
+	public void m2(){sop("m2"); sop(a);}
+	public void m3(){}
+	public void m4(){}
+	main -> m1 -> m2 -> m4 -> m3
+	
+Program 52: StaticMethodCallingPractise
+	public static int a = 10; //static var
+	public static void m1(){ sop(a);}
+	public static void m2(){}
+	public static void m3(){}
+	public static void m4(){}
+	main -> m1 -> m2 -> m4 -> m3
+	
+Program 53: InstanceAndStaticMethodCallingPractise
+	public static int a = 10; //static var
+	public int b = 20; //instance var
+	
+	public void m1(){ sop(a); sop(b);}
+	public static void m2(){}
+	public void m3(){}
+	public static void m4(){}
+	main -> m1 -> m2 -> m4 -> m3
+	
+Program 54: InstanceAndStaticMethodParamCallingPractise
+	public static int a = 10; //static var
+	public int b = 20; //instance var
+	
+	public void m1(int c){ sop(a); sop(b);}
+	public static void m2(float f){}
+	public void m3(InstanceAndStaticMethodParamCallingPractise f){}
+	public static void m4(){}
+	main -> m1 -> m2 -> m4 -> m3
+	
+	
+Program 55: InstanceAndStaticMethodReturnPractise
+	public static int a = 10; //static var
+	public int b = 20; //instance var
+	
+	public int m1(int c){ sop(a); sop(b);}
+	public static int m2(float f){}
+	public void m3(InstanceAndStaticMethodParamCallingPractise f){}
+	public static boolean m4(){}
+	main -> m1 -> m2 -> m4 -> m3
+	
+Program 56: Person
+	private int age;
+	private String name;
+	private String fatherName;
+	private String motherName;
+	
+	public static String villageName;
+	
+
+//create 5  objects and set values and display them
+//Use setter and getters
+
+Program 57: Movie
+	private String hero;
+	private String heroin;
+	private float payment;
+	private int shootingdays;
+	
+
+	//default constructor
+		- should print defaut constructor
+		
+	//parameterized constructor
+		- should print param constructor
+		
+	//all variable setters and getters
+	// print the values.
+	
+Program 58: User
+	String username;
+	String password;
+	String dob;
+	int age;
+	int id;
+	String firstname;
+	String lastname;
+	String address;
+	float salary;
+	
+	//parameterized constructor
+	User(....){}
+	
+	public void initValues(){sop("values initilized");}
+	
+	public Strig toString(){
+		username + " "+ password+" "+.....;
+	}
+	
+- Write a constructor with all values above and set the values in constructor.
+- call initValues method from constructor.
+- write setter and getter for all above properties.
+- write toString();
+	
+Program: 59 ConstructorWithThisFirstLine
+	Write a program for first line of this() call
+		A(){
+			//call another constructor
+		}
+		
+		A(int i){
+		}
+		
+	
+Program: 60 ConstructorOverloading
+	Write a program for first line of this() call
+		
+		int age;
+		Abc(){
+			
+		}
+		
+		Abc(int i){
+			age = i
+		}
+	- Write in main method, create a object and print the value.
+	
+Program: 61 ConstructorRecursive
+	Write a program for first line of this() call
+		
+		int age;
+		Abc(){
+			call another constructor
+		}
+		
+		Abc(int i){
+			call another constructor
+			age = i
+		}
+	- Write in main method, create a object and print the value.
+	
+Program 62: SingleInheritanceExample
+Program 62: MultipleInheritanceExample
+Program 62: MultiLevelInheritanceExample
+Program 62: ParentClassRefExample
+	A c = new C();
+	
+Program 63:TypeCastingExample for each rule
+
+
+21/3/2019
+Test
+ - abc.txt
+ - ab.txt
+ -servere.txt
+ - server2.txt
+ - servers.txt
+ -abs.txt
+ - badugus.txt
+ 
+Program 64: Find all file names with which are starting with A
+	
+Program 65: Find all file names with which are ends with S
+	abs, servers
+	
+Program 66: Find all file names with which are ends with S and starts with B
+	badugus.txt
+	
+Program 67: Find all file names with which are contains server
+	server2, servers
+
+program 68: write all io package programs with try and catch.
+	file
+	filewriter
+	filereader
+	bufferwriter
+	
+program:69 String s = "Sudhakar from karuru" using map
+	Find how many times each character is available.
+	 s = 1
+	 u = 3
+	 d = 1
+	 h = 1
+	 a = 3
+	 
+	 - get the char array using toCharArray
+	 - loop thoruh the array
+	 - create a map and initilize it.
+	 - 
+	
+	

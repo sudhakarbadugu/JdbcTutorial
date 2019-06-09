@@ -1,0 +1,353 @@
+9/6/19
+jdbc:-
+	Java Database Connectivity
+
+Database:
+---------
+1. Database server
+	- It is a program which stores the data. It opens the connections. 
+	- It is responsbile for results for all queries like Select, delete, update, insert, create.
+	
+2. Database client
+	- Client which gets the data from server. It is just gui to represent data.
+	
+
+main packages:
+	1.java.sql
+	2.javax.sql
+
+- JDBC is part of JSE api.
+
+main interfaces:
+	1. Driver
+	2. Connection
+	3. Statement
+	4. PreparedSTatement
+	5. CallableStatement
+	6. Blob
+	7. Clob
+	8. ResultSet
+	
+	
+main classes:
+	1. DriverManager
+	2. Time
+	3. Date
+	4. TimeStamp
+	
+What are the steps?
+	1. Register the driver
+	2. Get the connection
+	3. Get the statement
+	4. Get the resultset
+	5. close the connection.
+	
+-------------------------------------------------------------
+Firt program
+
+
+
+-------------------------------------------------------------
+
+DriverManager:
+- Important methods
+	1. registerDriver(Driver driver)
+	2. deRegisterDriver()
+	3. getConnection()
+	
+	
+Driver/Connection is an interface. How we will create an object for driver?
+	- Driver is an interface. We can't create object for interface. But we can create object for the child class. Using parent class reference, we can hold the child class object.
+	
+	
+- How many ways are there to register driver? Register the driver.
+There are two ways are there.
+	What is the use of Class.forName
+	1. using Class.forName("classname"); 
+		eg: Class.forName("oracle.jdbc.driver.OracleDriver");
+	
+	Here, 
+	- Class is a class and it is available in java.lang package.
+	- forName is a static method to create a class object.
+	- If given class is not available then it throws ClassNotFoundException.		
+	
+- forName method loads the OracleDriver into jvm memory. As part of the OracleDriver class it has static blocks to register the OracleDriver. When ever any class is loading into jvm memory, then static blocks will be executed from top to bottom. The below program shows how OracleDriver is implemented internally. Internally it is using DriverManager.registerDriver only.
+	Eg:
+--------------------------------------------------------------------------------------
+package com.sudhasoft.core;
+
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class Test {
+
+	public static void main(String[] args) {
+		// Model m = new Model();
+
+		try {
+			Class.forName("com.sudhasoft.core.OracleDriver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+}
+
+class OracleDriver {
+
+	// only once
+	// when ever class is loading
+	static {
+		// before jdbc 4 type
+		Driver d = new oracle.jdbc.driver.OracleDriver();
+		try {
+			DriverManager.registerDriver(d);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		System.out.println("Register the driver with oracle");
+	}
+
+	@Override
+	public String toString() {
+		return "this is model class";
+	}
+
+	static {
+		System.out.println("Model show 2");
+	}
+}
+
+package com.sudhasoft.jdbc;
+
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class UserRetrival {
+
+	public static void main(String[] args) {
+		
+		//before jdbc 4 type
+		Driver d = new oracle.jdbc.driver.OracleDriver();
+		try {
+			DriverManager.registerDriver(d);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "stocks", "stocks");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+}
+
+--------------------------------------------------------------------------------------
+	
+	2. Using the DriverManager to register the driver
+		Driver driver = new OracleDriver();
+		DriverManager.registerDriver(driver);
+package com.sudhasoft.jdbc;
+
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class UserRetrival {
+
+	public static void main(String[] args) {
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "stocks", "stocks");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+}
+---------------------------------------------------------------
+
+Connection:
+-----------
+Important methods
+	1. close
+	2. commit:	To save the changes
+	3. createBlob	
+	4. createClob
+	5. setAutoCommit: 
+	6. getAutoCommit
+	7. rollback
+	8. createStatement
+	9. prepareStatement
+	10. prepareCall
+	
+How will u get the connection?
+- We get the connection from the DriverManager.
+		DriverManager.getConnection("url", "username", "password");
+		
+Eg: To get the oracle connection	
+	Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "stocks", "stocks");
+	
+- Every database has limited connections. eg: it may have 500 or 1000. If a developer gets the connection, he is responsbile to close the connction. If developer is not closing the connections, later point, no will not get a new connection from database. So must close the connection once we done.
+
+url:
+	jdbc: 
+		jdbc protocal 
+	oracle: 
+		it tells we are connecting to oracle.
+	thin: 
+		it is protocal name
+	@localhost: 
+		the machine addrress. Where database server exists. We can use 127.0.0.1 also for this. or we can use the ip address of the database server.
+	1521: 
+		port number. Each program runs on different port number. Oracle runs on 152 port number
+	xe: 
+		product version. xe means express (free) edition. For commercial version it may change.
+
+
+Statement:
+- It is an interface.
+Important methods.
+	1. executeQuery()
+	2. exuecueUpdate()
+	3. execute()
+	
+How to create statement object?
+	- We can get the Statement object using connection class. 
+		connection.createStatement(): This method returns the statement child object.
+
+
+ResultSet:-
+- It is an interface.
+Important methods.
+	1. next
+	2. getXxx(int):	Index starts from 1 But not from 0.
+		- If column index is not avialable then it throws SQLException.
+		getInt
+		getString
+		getBoolean
+		getFloat()
+	3. getXxx(String)
+		getInt
+		getString
+		getBoolean
+		getFloat()
+		
+
+- Alwasys we should use the getXxx(String) methods, It is recomended approch.
+	Eg: rs.getString("id");
+	
+Why we should use getString("id") insteadof getString(1)?
+If any new column "uid" is added before the id column, then "uid" column becomes as 1st column. But in the getString(1) now returns the "uid" value insteadof id column.
+
+------------------------------------------------------------
+package com.sudhasoft.jdbc;
+
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class UserRetrival {
+
+	public static void main(String[] args) {
+
+		// before jdbc 4 type
+		Driver d = new oracle.jdbc.driver.OracleDriver();
+		try {
+			DriverManager.registerDriver(d);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+//		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		Connection connection = null;
+		try {
+			connection =DriverManager.getConnection(  
+					"jdbc:oracle:thin:@localhost:1521/xe","stocks","stocks");  
+			Statement createStatement = connection.createStatement();
+
+			ResultSet rs = createStatement.executeQuery("Select * from stock_user");
+
+			while(rs.next()) {
+				System.out.print("id: "+ rs.getString("id") + "   ");
+				System.out.print(rs.getString(2) + "   ");
+				System.out.print(rs.getString(3) + "    ");
+				System.out.print(rs.getString(4) + "\t");
+				System.out.print(rs.getString(5) + "\t");
+				//System.out.print(rs.getString(6) + "\t");
+				System.out.println();
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				if (connection != null) {
+					System.out.println("Close the connection");
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+}
+---------------------------------------------------------------	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

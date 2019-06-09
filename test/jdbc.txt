@@ -1,0 +1,26 @@
+9/6/2019
+-------
+	Records:
+	1. Sudhakar
+	2. suma
+	3. prasad
+	4.Prabhu
+	5. Murali
+	6. rakesh
+	7. rajesh
+	
+1. Display all users from stock_user where name starts with 'S' - case insensitive
+	Eg:
+	Ans: Sudhakar, suma
+	
+2. Display all users from stock_user where name contains with 'S' - case insensitive
+	Eg:
+		Sudhakar, suma, rakesh, rajesh, prasad
+
+3. Display all users from stock_user where name is 'Sudhakar'. It should match entrie name.
+	Eg:
+		Sudhakar
+
+4. Display all users from stock_user where id is lessthan 10
+
+5. Whats app program.

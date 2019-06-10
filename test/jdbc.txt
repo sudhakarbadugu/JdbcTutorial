@@ -15,7 +15,7 @@
 	
 2. Display all users from stock_user where name contains with 'S' - case insensitive
 	Eg:
-		Sudhakar, suma, rakesh, rajesh, prasad
+		Sudhakar, suma, rakesh, rajesh, prasad 
 
 3. Display all users from stock_user where name is 'Sudhakar'. It should match entrie name.
 	Eg:

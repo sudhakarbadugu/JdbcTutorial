@@ -221,9 +221,14 @@ Statement:
 - It is an interface.
 Important methods.
 	1. executeQuery()
-	2. exuecueUpdate()
+		To retrive the data from database server.
+		
+	2. exuecuteUpdate()
+		To update/insert/delete the records, we user executeUpdate
+		
 	3. execute()
-	
+		To run the ddl commands.
+		
 How to create statement object?
 	- We can get the Statement object using connection class. 
 		connection.createStatement(): This method returns the statement child object.
@@ -315,10 +320,197 @@ public class UserRetrival {
 	}
 }
 ---------------------------------------------------------------	
-	
-	
-	
-	
+stockUserInsert:
+
+package com.sudhasoft.core;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class StockUserInsert {
+
+	public static void main(String[] args) {
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/xe", "stocks", "stocks");
+			
+			Statement stmt = connection.createStatement();
+		
+
+			for(int i=1; i <= 10 ; i++) {
+				
+				int result = stmt.executeUpdate("insert into stock_user values("+ i +", '"+i+-4-2019', 'Badugu" + i + "', 'badugu', '2-4-2019')");
+				System.out.println(result);
+			}
+//			ResultSet rs = stmt.executeQuery("select * from stock_user");
+//			while(rs.next()) {
+//				String username = rs.getString("username");
+//				System.out.println(username);
+//			}
+			
+			
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+}
+out put:1 Suma
+2 Suma pushpa
+3 Sudha
+4 Suma
+5 Badugu1
+6 Badugu2
+7 Badugu3
+8 Badugu4
+9 Badugu5
+10 Badugu6
+11 Badugu7
+12 Badugu8
+13 Badugu9
+14 Badugu10
+15 Badugu1
+16 Badugu2
+17 Badugu3
+18 Badugu4
+19 Badugu5
+20 Badugu6
+21 Badugu7
+22 Badugu8
+23 Badugu9
+24 Badugu10
+
+-------------------------------------------------------------------------------------------	
+stockUserDelete:
+
+	package com.sudhasoft.core;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class StockUserDelete {
+
+	public static void main(String[] args) {
+		
+		try {
+			System.out.println("Loading driver");
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			System.out.println("Getting the connecction");
+			Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/xe", "stocks", "stocks");
+			
+			System.out.println("Create the statement");
+			Statement stmt = connection.createStatement();
+			
+			System.out.println("Execute update");
+			int result = stmt.executeUpdate("delete from stock_user where username = 'Badugu'");
+			
+			System.out.println(result);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+}
+output:
+Loading driver
+Getting the connecction
+Create the statement
+Execute update
+0
+------------------------------------------------------------------------------------------------------
+stockUserUpdate:
+
+package com.sudhasoft.core;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class StockUserUpdate {
+
+	public static void main(String[] args) {
+		
+		try {
+			System.out.println("Register driver");
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			System.out.println("Get the connection");
+			Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/xe", "stocks", "stocks");
+			
+			System.out.println("Create stnt");
+			Statement stmt = connection.createStatement();
+		
+			System.out.println("Execute update");
+			int result = stmt.executeUpdate("update stock_user set username = 'Sudha' where username = 'Suda'");
+			System.out.println(result);
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+}
+------------------------------------------------------------------------------------
+stockUserRetrival:
+																														package com.sudhasoft.core;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class StockUserRetrival {
+
+	public static void main(String[] args) {
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/xe", "stocks", "stocks");
+			
+			Statement stmt = connection.createStatement();
+			
+			ResultSet rs= stmt.executeQuery("select username, id from stock_user");
+			int count = 0;
+			while(rs.next()) {
+				String username = rs.getString("username");
+				int id = rs.getInt("id");
+				System.out.println(++count + " "+username);
+				
+//				if(username.toLowerCase().startsWith("S")) {
+//					System.out.print(username);
+//					System.out.println(id);
+//				}
+//				
+//				if(username.toLowerCase().contains("ra")) {
+//					System.out.print(username);
+//					System.out.println(id);
+//				}
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+}
+
 	
 	
 	

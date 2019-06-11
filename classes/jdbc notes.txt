@@ -187,6 +187,8 @@ Important methods
 	3. createBlob	
 	4. createClob
 	5. setAutoCommit: 
+		To set the auto commit value. true -  will save queries automatically.
+		- false - queries will not save to the database. If we want to store the queries then excliplitly we need to call con.commit()
 	6. getAutoCommit
 	7. rollback
 	8. createStatement
@@ -216,18 +218,81 @@ url:
 	xe: 
 		product version. xe means express (free) edition. For commercial version it may change.
 
+-------------------------------------------------------------------------
+How to maintain commit in jdbc
+
+package com.sudhasoft.core;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class ExecuteDemo {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/xe", "stocks", "stocks");
+			
+			con.setAutoCommit(false);
+			boolean autoCommit = con.getAutoCommit();
+			System.out.println(autoCommit);
+			
+			
+			
+			Statement stm = con.createStatement();
+			
+			boolean result = false;
+//			boolean result = stm.execute("delete from stock_user where username= 'murali'");
+//			System.out.println(result);
+			
+			// ResultSet rs=stm.executeQuery("select * from stock_user");
+			for (int i = 1; i <= 3; i++) {
+				result = stm
+						.execute("insert into stock_user values(12,'6-2-2019','murali','murali','8-1-2011')");
+				System.out.println("result");
+			}
+			
+			con.commit();
+			
+			ResultSet rs = stm.executeQuery("select * from stock_user");
+
+			while (rs.next()) {
+				String username = rs.getString("username");
+				System.out.println(username);
+
+			}
+
+		} catch (ClassNotFoundException q) {
+			q.printStackTrace();
+		} catch (SQLException j) {
+			j.printStackTrace();
+		}
+
+	}
+}
+-------------------------------------------------------------------------
 
 Statement:
 - It is an interface.
 Important methods.
 	1. executeQuery()
 		To retrive the data from database server.
+		- We use this to execute the Select statements.
 		
 	2. exuecuteUpdate()
-		To update/insert/delete the records, we user executeUpdate
+		To update/insert/delete the records, we use executeUpdate for running insert, update and delete queries.
+		- it returs an int value. It tells how many records are inserted/updated/deleted.
 		
 	3. execute()
-		To run the ddl commands.
+		- To run the ddl commands.
+		- We can run 'create tables', alter table, drop, insert, update, delete.
+		- Apart from select query, we can run all other queries.
+		- it returns a boolean value. if query runs successfully then it returns true else false.
 		
 How to create statement object?
 	- We can get the Statement object using connection class. 
@@ -258,6 +323,11 @@ Why we should use getString("id") insteadof getString(1)?
 If any new column "uid" is added before the id column, then "uid" column becomes as 1st column. But in the getString(1) now returns the "uid" value insteadof id column.
 
 ------------------------------------------------------------
+1. executeQuery()
+		To retrive the data from database server.
+		- We use this to execute the Select statements.
+		
+
 package com.sudhasoft.jdbc;
 
 import java.sql.Connection;
@@ -510,8 +580,255 @@ public class StockUserRetrival {
 
 	}
 }
+----------------------------------------------------------
+package com.sudhasoft.core;
 
-	
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class ExecuteDemo {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/xe", "stocks", "stocks");
+			
+			con.setAutoCommit(false);
+			boolean autoCommit = con.getAutoCommit();
+			System.out.println(autoCommit);
+			
+			
+			
+			Statement stm = con.createStatement();
+			
+			boolean result = false;
+//			boolean result = stm.execute("delete from stock_user where username= 'murali'");
+//			System.out.println(result);
+			
+			// ResultSet rs=stm.executeQuery("select * from stock_user");
+			for (int i = 1; i <= 3; i++) {
+				result = stm
+						.execute("insert into stock_user values(12,'6-2-2019','murali','murali','8-1-2011')");
+				System.out.println("result");
+			}
+			
+			con.commit();
+			
+			ResultSet rs = stm.executeQuery("select * from stock_user");
+
+			while (rs.next()) {
+				String username = rs.getString("username");
+				System.out.println(username);
+
+			}
+
+		} catch (ClassNotFoundException q) {
+			q.printStackTrace();
+		} catch (SQLException j) {
+			j.printStackTrace();
+		}
+
+	}
+}
+-----------------------------------------------------------------------------------------
+11/6/2019
+PreparedStatement:
+
+		Statement		- Parent interface
+			|			- extends
+	PreparedStatement	- child interface
+
+- It is an interface. It is child of Statement.
+- It improves the performance. 
+- PreparedSTatement uses the positional parameters. 
+- When ever we using the positional paramters, database will identify the query from query cache and returns the results fast.
+- positional parameters index starts from 1.
+
+Important methods:
+-----------------
+	1. executeQuery()
+	2. executeUpdate()
+	3. seXxx(int indexPosition, value)
+
+
+What will happen without positional parameters?
+- Query will send to database server. data base server is a program. it will save all tables data into a file called .data.
+- It will validate the query. If query is good then it runs the algorithm and finds the table information. This informaion will be saved in a query cache. If same query runs again, db server will skip this step.
+
+- If query is wrong, it will return error.
+- If query changes each time, then it runs above step again.
+
+
+What is positional parameter?
+	- Changing the real value to ? called position parameter.
+	Eg:	Original query
+		select * from stock_user where username ='murali';
+	to (positional parameter query)
+		select * from stock_user where username = ?;
+
+
+When we should use PreparedSTatement?
+- When query is repeadly changing the parameters, then we should use the PreparedSTatement. Here parameters are getting changed so these type queries we should use PreparedSTatement.
+	Eg: select * from stock_user where username ='murali';
+	Eg: select * from stock_user where username ='prasad';
+
+
+
+- If we use the positional parameter and if we are not setting positional parameter value then below exception will occur
+java.sql.SQLException: Missing IN or OUT parameter at index:: 1	
+
+------------------------------------------------------------------------------------------
+
+package com.sudhasoft.core;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class PreparedStatementExample {
+
+	public static void main(String[] args) {
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			
+			Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/xe", "stocks", "stocks");
+			
+			PreparedStatement pstmt = connection.prepareStatement("select * from stock_user where username = ?");
+			pstmt.setString(1, "Sudha");
+			ResultSet rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				String username = rs.getString("username");
+				System.out.println(username);
+			}
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+}
+-------------------------------------------
+Write a program to show the users based on user input:
+-------------
+
+package com.sudhasoft.core;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class PreparedStatementInsertUsingUserInput {
+
+	public static void main(String[] args) {
+		
+		
+		try {
+			System.out.println("Enter username");
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			String username = null;
+			try {
+				username = br.readLine();
+//				System.out.println(username);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			
+			Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/xe", "stocks", "stocks");
+			
+			PreparedStatement pstmt = connection.prepareStatement("select * from stock_user where username = ?");
+			pstmt.setString(1, username);
+			ResultSet rs = pstmt.executeQuery();
+			
+			System.out.println("Finding the database records:");
+			boolean isRecordsAvailable = false;
+			while(rs.next()) {
+				isRecordsAvailable = true;
+				String dbusername = rs.getString("username");
+				System.out.println(dbusername);
+			}
+			
+			if(isRecordsAvailable == false) {
+				System.out.println("No records are avaible.");
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+}
+-------------------------------------------
+Write a progam to insert records and take input from user.
+
+package com.sudhasoft.core;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class PreparedStatementExampleUsingUserInput {
+
+	public static void main(String[] args) {
+		
+		
+		try {
+			System.out.println("Enter username");
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			String username = null, password = null;
+			try {
+				username = br.readLine();
+//				System.out.println(username);
+				
+				System.out.println("Enter password");
+				password = br.readLine();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			
+			Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/xe", "stocks", "stocks");
+			
+			PreparedStatement pstmt = connection.prepareStatement("insert into stock_user values(120, '2-4-2019', ?, ?, '2-4-2019')");
+			pstmt.setString(1, username);
+			pstmt.setString(2, password);
+			int result = pstmt.executeUpdate();
+			
+			System.out.println("Result: "+ result);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+}
+---------------------------------------------------
 	
 	
 	

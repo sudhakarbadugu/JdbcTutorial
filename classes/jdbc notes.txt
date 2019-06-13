@@ -7,12 +7,15 @@ Database:
 1. Database server
 	- It is a program which stores the data. It opens the connections. 
 	- It is responsbile for results for all queries like Select, delete, update, insert, create.
+	- Algoirtms will be run by server.
 	
 2. Database client
 	- Client which gets the data from server. It is just gui to represent data.
-	
+	Eg: SQL Comand plus
+		JDBC java program
 
-main packages:
+
+jdbc main packages:
 	1.java.sql
 	2.javax.sql
 
@@ -22,7 +25,7 @@ main interfaces:
 	1. Driver
 	2. Connection
 	3. Statement
-	4. PreparedSTatement
+	4. PreparedStatement
 	5. CallableStatement
 	6. Blob
 	7. Clob
@@ -44,12 +47,12 @@ What are the steps?
 	
 -------------------------------------------------------------
 Firt program
-
-
-
 -------------------------------------------------------------
 
 DriverManager:
+--------------
+- DriverManager is a class.
+
 - Important methods
 	1. registerDriver(Driver driver)
 	2. deRegisterDriver()
@@ -72,7 +75,7 @@ There are two ways are there.
 	- If given class is not available then it throws ClassNotFoundException.		
 	
 - forName method loads the OracleDriver into jvm memory. As part of the OracleDriver class it has static blocks to register the OracleDriver. When ever any class is loading into jvm memory, then static blocks will be executed from top to bottom. The below program shows how OracleDriver is implemented internally. Internally it is using DriverManager.registerDriver only.
-	Eg:
+Eg:
 --------------------------------------------------------------------------------------
 package com.sudhasoft.core;
 
@@ -276,7 +279,6 @@ public class ExecuteDemo {
 	}
 }
 -------------------------------------------------------------------------
-
 Statement:
 - It is an interface.
 Important methods.
@@ -645,7 +647,7 @@ PreparedStatement:
 
 - It is an interface. It is child of Statement.
 - It improves the performance. 
-- PreparedSTatement uses the positional parameters. 
+- PreparedStatement uses the positional parameters. 
 - When ever we using the positional paramters, database will identify the query from query cache and returns the results fast.
 - positional parameters index starts from 1.
 
@@ -657,7 +659,7 @@ Important methods:
 
 
 What will happen without positional parameters?
-- Query will send to database server. data base server is a program. it will save all tables data into a file called .data.
+- Query will send to database server. data base server is a program. it will save all tables data into a file called .dbf.
 - It will validate the query. If query is good then it runs the algorithm and finds the table information. This informaion will be saved in a query cache. If same query runs again, db server will skip this step.
 
 - If query is wrong, it will return error.
@@ -672,8 +674,8 @@ What is positional parameter?
 		select * from stock_user where username = ?;
 
 
-When we should use PreparedSTatement?
-- When query is repeadly changing the parameters, then we should use the PreparedSTatement. Here parameters are getting changed so these type queries we should use PreparedSTatement.
+When we should use PreparedStatement?
+- When query is repeadly changing the parameters, then we should use the PreparedStatement. Here parameters are getting changed so these type queries we should use PreparedStatement.
 	Eg: select * from stock_user where username ='murali';
 	Eg: select * from stock_user where username ='prasad';
 
@@ -829,9 +831,120 @@ public class PreparedStatementExampleUsingUserInput {
 
 }
 ---------------------------------------------------
+Transaction management:
+Saving one or more tables into database in a signle transaction called transaction management.
+Eg:	If an user order a laptop and payment is failed, then we should mark order as failed and should add records to both tables.
+
+- If order is success then we should save the records to both tables.
+
+
+How will you achive transaction management in jdbc?
+1. We need to disable the autocommit as shown below. By default in jdbc autoCommit is true.
+	connection.setAutoCommit(false);
+	- If autoCommit is true, immediately indivisual queries will saved.
+	- if autocommit is false, queries will not be saved to database untill we run the connection.commit().
+2. What ever orders quereis need to be in transaction, we have write here.
+
+3. connection.commit(). It will end the transaction and save the data to db server.
+4. If transaction fails, then we sholud print a error message to the user in the catch block.
+	Eg:
+		catch(SQLException e) {
+			System.out.println("Ordereed failed: "+ e.getMessage());
+			
+		}
+		
+Tables:
+---------
+create table order_details(order_id number, item_name varchar2(250), quantity number, price number);
+create table order_payment(paymet_id number, order_id number, payment_status varchar2(6));
+
+insert into order_details values(1, 'Lenovo Laptop', 1, 30000);
+insert into order_payment values(1, 1, 'fail');
+
+
+
+package com.sudhasoft.core;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class TransactionExample {
+
+	public static void main(String[] args) {
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/xe", "stocks", "stocks");
+			
+			//transaction starts here
+			connection.setAutoCommit(false);
+			
+			PreparedStatement pstmt = connection.prepareStatement("insert into order_details values(1, 'Lenovo Laptop', 1, 30000)");
+			pstmt.executeUpdate();
+			
+			PreparedStatement pstmt1 = connection.prepareStatement("insert into order_payment values(1, 1, ?)");
+//			pstmt1.setString(1, "true");		
+			pstmt1.executeUpdate();
+			
+			connection.commit();
+			System.out.println("Ordereed successfully");
+			//transaction end here.
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch(SQLException e) {
+			System.out.println("Ordereed failed: "+ e.getMessage());
+			
+		}
+
+	}
+}
 	
 	
-	
+------------------------------------------------
+- Common code we write in a separate class.
+- Class must be end with Utils.
+- All methods should be static and public.
+
+package com.sudhasoft.util;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+public class DBUtils {
+
+	public static Connection getConnection() {
+		return getConnection("jdbc:oracle:thin:@localhost:1521/xe", "stocks", "stocks");
+	}
+
+	public static Connection getConnection(String url, String userName, String password) {
+		Connection connection = null;
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+
+			connection = DriverManager.getConnection(url, userName, password);
+		} catch (Exception e) {
+			System.out.println("Error occurred while opening connection");
+		}
+
+		return connection;
+	}
+
+	public static void closeConnection(Connection con) {
+		try {
+			if (con != null) {
+				con.close();
+			}
+		} catch (Exception e) {
+			System.out.println("Error occrred while closing connection " + e.getMessage());
+		}
+	}
+}
+
+------------------------------------------------
 	
 	
 	

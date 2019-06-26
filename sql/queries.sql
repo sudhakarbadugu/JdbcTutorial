@@ -5,7 +5,10 @@ insert into stock_user values(107, '2-4-2019', 'Suma', 'Suma', '2-4-2019');
 insert into stock_user values(108, '2-4-2019', 'Suma pushpa', 'Suma', '2-4-2019');
 insert into stock_user values(109, '2-4-2019', 'Suda', 'Suma', '2-4-2019');
 insert into stock_user values(110, '2-4-2019', 'Suma', 'Suma', '2-4-2019');
-
+ syntax:
+ create user username identified by  password;
+ ex:create user murali identified by prasad;
+ 
 -- Update all rows
 update stock_user set username = 'Suda';
  
@@ -20,9 +23,19 @@ delete from stock_user;
 delete from stock_user where username = 'Badugu';
 -- queries for stock_alerts
 
-
+--create table
 create table order_details(order_id number, item_name varchar2(250), quantity number, price number);
 create table order_payment(paymet_id number, order_id number, payment_status varchar2(6));
 
 insert into order_details values(1, 'Lenovo Laptop', 1, 30000);
 insert into order_payment values(1, 1, 'fail');
+
+create table student_details(student_id number,person_name varchar2(20), group_name varchar2(7),fee number);
+create table student_fee (fee_id number, person_name varchar2(15),student_status varchar2(5));
+
+create table stock_user_asset(username varchar2(30), userIcon blob);
+insert into stock_user_asset values(?, ?)
+
+create table stock_user_document(username varchar2(30), userDocument clob);
+insert into stock_user_document values(?, ?)
+

@@ -194,7 +194,9 @@ Important methods
 		- false - queries will not save to the database. If we want to store the queries then excliplitly we need to call con.commit()
 	6. getAutoCommit
 	7. rollback
-	8. createStatement
+	8. createStatement()
+	9. createStatement(int resultSetType, int resultSetConcurrency)	//To create bi directional resutlset
+	10. createStatement(int resultSetType, int resultSetConcurrency, int xxxparam) //To create bi directional resutlset
 	9. prepareStatement
 	10. prepareCall
 	
@@ -303,6 +305,12 @@ How to create statement object?
 
 ResultSet:-
 - It is an interface.
+- By default ResultSet forward directional only.
+- If we want to create a birectional resultset then we can create as shown below
+	//To create bi directional resutlset
+	Statement  stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			ResultSet rs = stmt.executeQuery("select * from stock_user");
+			
 Important methods.
 	1. next
 	2. getXxx(int):	Index starts from 1 But not from 0.
@@ -316,13 +324,79 @@ Important methods.
 		getString
 		getBoolean
 		getFloat()
-		
+	4. absolute(row)
+	5. last
+	6. afterLast
+	7. first
+	8. beforeFirst
+	9. deleteRow
+	10. updateXxx(String, String value)
 
 - Alwasys we should use the getXxx(String) methods, It is recomended approch.
 	Eg: rs.getString("id");
 	
 Why we should use getString("id") insteadof getString(1)?
 If any new column "uid" is added before the id column, then "uid" column becomes as 1st column. But in the getString(1) now returns the "uid" value insteadof id column.
+
+
+--------------------------------
+package com.sudhasoft.core;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import com.sudhasoft.util.DBUtils;
+
+public class ResultSetExample {
+
+	public static void main(String[] args) {
+		
+
+		Connection con = DBUtils.getConnection();
+		try {
+			Statement  stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			ResultSet rs = stmt.executeQuery("select * from stock_user");
+			System.out.println("Executing result set");
+			int count = 0;
+
+			while(rs.next()) {
+				String username = rs.getString("username");
+				System.out.println(username);
+				
+//				if("Sudha".equalsIgnoreCase(username)) {
+//					rs.updateString("username", "Sudhakar Yadhav");
+//				}
+				
+				count++;
+			}
+			
+			System.out.println(count);
+			//stmt.executeUpdate("Update stock_user set username = 'Sudha' where username='Sudhakar Yadhav'");
+			
+			System.out.println("Revesed order");
+			while(rs.previous()) {
+				String username = rs.getString("username");
+				System.out.println(username);
+								
+			}
+			
+			System.out.println("Absolute");
+			rs.absolute(2);
+			String username = rs.getString("username");
+			System.out.println(username);
+			
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+}
+
 
 ------------------------------------------------------------
 1. executeQuery()
@@ -663,7 +737,8 @@ What will happen without positional parameters?
 - It will validate the query. If query is good then it runs the algorithm and finds the table information. This informaion will be saved in a query cache. If same query runs again, db server will skip this step.
 
 - If query is wrong, it will return error.
-- If query changes each time, then it runs above step again.
+- If query changes each time, then it runs above st
+ep again.
 
 
 What is positional parameter?
@@ -945,16 +1020,352 @@ public class DBUtils {
 }
 
 ------------------------------------------------
+Metadata:
+- It is a data about data.
+
+1. DatabaseMetaData
+2. ResultSetMetaData
+
+package com.sudhasoft.core;
+
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import com.sudhasoft.util.DBUtils;
+
+public class ResultSetMetaDataExample {
+
+	public static void main(String[] args) {
+		
+
+		Connection con = DBUtils.getConnection();
+		try {
+			Statement  stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			ResultSet rs = stmt.executeQuery("select username, id from stock_user");
+			ResultSetMetaData metaData = rs.getMetaData();
+			System.out.println("Executing result set");
+			
+			int  dbColumncount = metaData.getColumnCount();
+			for(int i = 1 ; i <= dbColumncount; i++) {
+				System.out.print(metaData.getColumnName(i) + " ");
+				System.out.println(metaData.getColumnTypeName(i));
+			}
+
+			DatabaseMetaData dbMetaData = con.getMetaData();
+			System.out.println(dbMetaData.getDatabaseProductName());
+			System.out.println(dbMetaData.getDatabaseProductVersion());
+			System.out.println(dbMetaData.getDriverName());
+			System.out.println(dbMetaData.getJDBCMajorVersion());
+			System.out.println(dbMetaData.getSQLKeywords());
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+}
+
+--------------------------------------------------------
+CallableStatement
+ODBC driver example
+Driver types
+
+Blob:
+	Binary large object.
+	Ex: Images
+- It is an interface.
+
+-----
+create table stock_user_asset(username varchar2(30), userIcon blob);
+insert into stock_user_asset values(?, ?)
+------
+
+How will you set Binary data to prepareStatement?
+Using setBlob(1, fileInputStream).
+
+
+How will we get Blob object?
+	Using resultset object we will get blob object.
+	rs.getBlob(1)
+	rs.getBlob("columname");
 	
+Important methods:
+	blob.length(): Returns size/length of the binary data.
+	getBytes(1, length): Retuns byte[]. 
+		Index starts from 1. If we give 0 then SQLException will occurs.
+		
+------------------------------------------
+
+
+
+
+
+/**
+ * 
+ */
+package com.sudhasoft.jdbc;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+/**
+ * @author Murali
+ *
+ */
+public class BlobDemo {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// Get the connection
+		try {
+			FileInputStream fis = new FileInputStream("F:\\JDBCTutorial\\classes\\JDBC types.png");
+			System.out.println(fis);
+
+			Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/xe", "stocks",
+					"stocks");
+			PreparedStatement prepareStatement = connection
+					.prepareStatement("insert into stock_user_asset values(?, ?)");
+			
+			prepareStatement.setString(1, "jdbctutorial");
+			prepareStatement.setBlob(2, fis, fis.available());
+			int noOfRecords = prepareStatement.executeUpdate();
+			System.out.println("No of records inserted "+ noOfRecords);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+}
+
+/**
+ * 
+ */
+package com.sudhasoft.jdbc;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.sql.Blob;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+/**
+ * @author Murali
+ *
+ */
+public class BlobRetivalDemo {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// Get the connection
+		try {
+			Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/xe", "stocks",
+					"stocks");
+			PreparedStatement prepareStatement = connection
+					.prepareStatement("Select * from stock_user_asset");
+			ResultSet rs = prepareStatement.executeQuery();
+			
+			System.out.println("Retriving results from db");
+			while(rs.next()) {
+				String username = rs.getString("username");
+				System.out.println(username);
+				
+				Blob blob = rs.getBlob("userIcon");
+				System.out.println(blob);
+				
+				FileOutputStream fos = new FileOutputStream("F:\\dbimage.png");
+				int length = (int)blob.length();
+				
+				fos.write(blob.getBytes(1, length));
+				fos.flush();
+			}
+			System.out.println("Successfully downloaded");
+			
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+}
+
+------------------------------------------
+Clob:
+	Character large object	
+	eg: any text files.
+- It is an interface.
+
+-----
+create table stock_user_document(username varchar2(30), userDocument clob);
+insert into stock_user_document values(?, ?)
+------
+
+How will you set Clob data to prepareStatement?
+Using setClob(1, fileReader).
+
+
+How will we get Clob object?
+	Using resultset object we will get blob object.
+	rs.getClob(1)
+	rs.getClob("colummname");
 	
+Important methods:
+	length(): Returns size/length of the character data.
+	getSubString(1, (int)clob.length()) : Returns String 
+		Index starts from 1. If we give 0 then SQLException will occurs.
 	
-	
-	
-	
-	
-	
-	
-	
+/**
+ * 
+ */
+package com.sudhasoft.jdbc;
+
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+/**
+ * @author Murali
+ *
+ */
+public class ClobStoreDemo {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// Get the connection
+		try {
+
+			Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/xe", "stocks",
+					"stocks");
+			PreparedStatement prepareStatement = connection
+					.prepareStatement("insert into stock_user_document values(?, ?)");
+			
+			FileReader fr = new FileReader("F:\\CoreJavaTutorial\\test\\ReversePrintNumber.java");
+			prepareStatement.setString(1, "sudhakar");
+			prepareStatement.setClob(2, fr);
+			
+			int noOfRecords = prepareStatement.executeUpdate();
+			System.out.println("No of records inserted "+ noOfRecords);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+}
+
+
+/**
+ * 
+ */
+package com.sudhasoft.jdbc;
+
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+/**
+ * @author Murali
+ *
+ */
+public class ClobRetivalDemo {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// Get the connection
+		try {
+			Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/xe", "stocks",
+					"stocks");
+			PreparedStatement prepareStatement = connection
+					.prepareStatement("Select * from stock_user_document");
+			ResultSet rs = prepareStatement.executeQuery();
+			
+			System.out.println("Retriving results from db");
+			while(rs.next()) {
+				String username = rs.getString("username");
+				System.out.println(username);
+				
+				Clob clob = rs.getClob("userDocument");
+				System.out.println(clob);
+				
+				String data = clob.getSubString(1, (int)clob.length());
+				FileWriter fw = new FileWriter("F:\\mydocument.java");
+				fw.write(data);
+				System.out.println(data);
+				fw.flush();
+				fw.close();
+			}
+			System.out.println("Successfully downloaded");
+			
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+}
 	
 	
 	

@@ -39,3 +39,26 @@ insert into stock_user_asset values(?, ?)
 create table stock_user_document(username varchar2(30), userDocument clob);
 insert into stock_user_document values(?, ?)
 
+create table stocktotal(total number(10), name varchar2(2000));
+insert into stock_total values(?, ?)
+
+"{call insertR(?,?)}"
+create table user420(id number(10), name varchar2(200));  
+
+create or replace procedure "INSERTR"  
+(id IN NUMBER,  
+name IN VARCHAR2)  
+is  
+begin  
+insert into user420 values(id,name);  
+end;  
+/  
+
+create or replace procedure "stocktotalproc"  
+(total IN NUMBER,  
+name IN VARCHAR2)  
+is  
+begin  
+insert into stocktotal values(id,name);  
+end;  
+/  

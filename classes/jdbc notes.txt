@@ -1367,5 +1367,193 @@ public class ClobRetivalDemo {
 
 }
 ----------------------------------------------------------------
+Database Stored Procedure?
 
+
+Stock_Order
+
+name		'Rice'
+quantity	5
+price		50
+date		30/6/19
+totalPrice	250
+type 		buy
+
+
+name		'Rice'
+quantity	5
+price		60
+date		30/6/19
+totalPrice	300
+type 		sell
+
+Stock_Position
+
+
+CallableStatement:-
+- It is an interface.
+- It is child of PreparedStatement
+
+CallableStatement interface is used to call the stored procedures and functions.
+
+We can have business logic on the database by the use of stored procedures and functions that will make the performance better because these are precompiled.
+
+Suppose you need the get the age of the employee based on the date of birth, you may create a function that receives date as the input and returns age of the employee as the output.
+
+inheritance:
+	Statement
+		^
+		|
+	PreparedStatement
+		^
+		|
+	CallableStatement
+
+- To call the procedures we will use callable statement.
+
+Procedure parameter types
+		1. In	: To take the input
+		2. Out	: To give the output.
+E:g:
+create or replace procedure "stock_total_procedure"  
+(total IN NUMBER,  
+name IN VARCHAR2)  
+is  
+begin  
+ 
+end;  
+/  
+
+
+package com.sudhasoft.jdbc;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+import com.sudhasoft.util.DBUtils;
+
+public class CallableStatementDemo {
+
+	public static void main(String[] args) {
+
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/xe", "stocks", "stocks");
+			CallableStatement ctmt = con.prepareCall("{call insertr(?,?)}");
+			ctmt.setInt(1, 400);
+			ctmt.setString(2, "Dall");
+			
+			ctmt.execute();
+			System.out.println("Executed successfully");
+			
+			DBUtils.closeConnection(con);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+}
 -----------------------------------------------------------------
+
+package com.sudhasoft.core;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
+public class DateExample {
+
+	
+	public static void main(String[] args) {
+		
+//		Date d = new Date();
+//		
+//		System.out.println(d);
+		
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.DATE, -4);
+		
+		System.out.println(c.get(Calendar.DATE));
+		System.out.println(c.get(Calendar.DAY_OF_MONTH));
+		System.out.println(c.get(Calendar.MONTH));
+		System.out.println(c.get(Calendar.YEAR));
+
+		System.out.println(c.get(Calendar.DAY_OF_WEEK_IN_MONTH));
+		
+		System.out.println(c.get(Calendar.WEEK_OF_YEAR));
+		System.out.println(c.get(Calendar.DAY_OF_YEAR));
+		
+		
+		System.out.println(c.get(Calendar.HOUR_OF_DAY));
+		System.out.println(c.get(Calendar.MINUTE));
+		System.out.println(c.get(Calendar.SECOND));
+
+		System.out.println(c.get(Calendar.DAY_OF_WEEK));
+	
+		int hour = c.get(Calendar.HOUR_OF_DAY);
+		int min = c.get(Calendar.MINUTE);
+		
+		if(hour >= 9&& hour <=  15) {
+			if(hour == 9 && min < 15) {
+				System.out.println("Not trading time.");	
+			}else {
+				System.out.println("trading time.");
+			}
+		}else {
+			System.out.println("Not trading time.");
+		}
+
+		String bday = "30-09-2019";
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		try {
+			Date birthdayDate = sdf.parse(bday);
+			
+			System.out.println(birthdayDate);
+			Calendar bdayCal = Calendar.getInstance();
+			bdayCal.setTime(birthdayDate);
+			System.out.println(bdayCal.get(Calendar.DAY_OF_WEEK));
+			
+			bdayCal.add(Calendar.YEAR, 1);
+			System.out.println(bdayCal.get(Calendar.DAY_OF_WEEK));
+			
+			
+			Date nextYear = bdayCal.getTime();
+			System.out.println(nextYear);
+			
+			SimpleDateFormat sdf2 = new SimpleDateFormat("dd#MM#yyyy");
+			String nextYearString = sdf2.format(nextYear);
+			System.out.println(nextYearString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	
+	
+	
+	
+	}
+	
+	
+		
+}
+
+
+String to date:
+	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+	sdf.parse
+	
+Date to String
+	sdf.format
+

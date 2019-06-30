@@ -1556,4 +1556,92 @@ String to date:
 	
 Date to String
 	sdf.format
+program:--
+	package com.sudhasoft.core;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
+public class DateExample {
+
+	
+	public static void main(String[] args) {
+		
+//		Date d = new Date();
+//		
+//		System.out.println(d);
+		
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.DATE, -4);
+		
+		System.out.println(c.get(Calendar.DATE));
+		System.out.println(c.get(Calendar.DAY_OF_MONTH));
+		System.out.println(c.get(Calendar.MONTH));
+		System.out.println(c.get(Calendar.YEAR));
+
+		System.out.println(c.get(Calendar.DAY_OF_WEEK_IN_MONTH));
+		
+		System.out.println(c.get(Calendar.WEEK_OF_YEAR));
+		System.out.println(c.get(Calendar.DAY_OF_YEAR));
+		
+		
+		System.out.println(c.get(Calendar.HOUR_OF_DAY));
+		System.out.println(c.get(Calendar.MINUTE));
+		System.out.println(c.get(Calendar.SECOND));
+
+		System.out.println(c.get(Calendar.DAY_OF_WEEK));
+	
+		int hour = c.get(Calendar.HOUR_OF_DAY);
+		int min = c.get(Calendar.MINUTE);
+		
+		if(hour >= 9&& hour <=  15) {
+			if(hour == 9 && min < 15) {
+				System.out.println("Not trading time.");	
+			}else {
+				System.out.println("trading time.");
+			}
+		}else {
+			System.out.println("Not trading time.");
+		}
+
+		String bday = "30-09-1989";
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		try {
+			Date birthdayDate = sdf.parse(bday);
+			
+			System.out.println(birthdayDate);
+			Calendar bdayCal = Calendar.getInstance();
+			bdayCal.setTime(birthdayDate);
+			System.out.println(bdayCal.get(Calendar.DAY_OF_WEEK));
+			
+			bdayCal.add(Calendar.YEAR, 1);
+			System.out.println(bdayCal.get(Calendar.DAY_OF_WEEK));
+			
+			int age = c.get(Calendar.YEAR) - bdayCal.get(Calendar.YEAR);
+			System.out.println("Age:" + age);
+			
+			Date nextYear = bdayCal.getTime();
+			System.out.println(nextYear);
+			
+			SimpleDateFormat sdf2 = new SimpleDateFormat("dd#MM#yyyy");
+			String nextYearString = sdf2.format(nextYear);
+			System.out.println(nextYearString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	
+	
+	
+	
+	}
+	
+	
+		
+}
+
 
